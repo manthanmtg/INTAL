@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+// -------------------- Helper Functions -------------------------------
+
 char *strrev(char *str)
 {
     char *p1, *p2;
@@ -34,6 +36,7 @@ char to_char(const int num)
 {
     return num + '0';
 }
+// ------------------------------------------------------------------
 
 // Returns the sum of two intals.
 char *intal_add(const char *intal1, const char *intal2)
@@ -71,6 +74,7 @@ char *intal_add(const char *intal1, const char *intal2)
     strrev(final_num); // big-endian
     return final_num;
 }
+
 
 // Returns the comparison value of two intals.
 // Returns 0 when both are equal.
