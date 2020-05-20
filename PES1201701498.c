@@ -71,3 +71,29 @@ char *intal_add(const char *intal1, const char *intal2)
     strrev(final_num); // big-endian
     return final_num;
 }
+
+// Returns the comparison value of two intals.
+// Returns 0 when both are equal.
+// Returns +1 when intal1 is greater, and -1 when intal2 is greater.
+int intal_compare(const char *intal1, const char *intal2)
+{
+    short int i = strlen(intal1) - 1;
+    short int j = strlen(intal2) - 1;
+
+    if (i > j)
+        return 1; // length of intal1 is greater than length of intal2
+    if (i < j)
+        return -1; // length of intal2 is greater than length of intal1
+
+    // same length : go from 0 index to high
+    i = 0;
+    while (intal1[i] != '\0')
+    {
+        if (intal1[i] > intal2[i])
+            return 1;
+        if (intal2[i] > intal1[i])
+            return -1;
+        ++i;
+    }
+    return 0;
+}
