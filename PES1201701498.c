@@ -75,7 +75,6 @@ char *intal_add(const char *intal1, const char *intal2)
     return final_num;
 }
 
-
 // Returns the comparison value of two intals.
 // Returns 0 when both are equal.
 // Returns +1 when intal1 is greater, and -1 when intal2 is greater.
@@ -100,4 +99,61 @@ int intal_compare(const char *intal1, const char *intal2)
         ++i;
     }
     return 0;
+}
+
+// Returns the difference (obviously, nonnegative) of two intals.
+char *intal_diff(const char *intal1, const char *intal2)
+{
+    short int cmp = intal_compare(intal1, intal2);
+    char *diff = (char *)malloc(1001 * sizeof(char));
+    if (cmp == 0)
+        return "0";
+    if (cmp == -1) // if intal2 is greater : swap intal1 and intal2 (pointers)
+    {
+        const char *temp = intal1;
+        intal1 = intal2;
+        intal2 = temp;
+    }
+
+    char *intal1t = (char *)malloc(1001 * sizeof(char));
+    strcpy(intal1t, intal1);
+
+    short int i = strlen(intal1t) - 1;
+    short int j = strlen(intal2) - 1;
+    short int k = 0;
+    short int num1 = 0;
+    short int num2 = 0;
+    while (j != -1)
+    {
+        num1 = to_num(intal1t[i]);
+        num2 = to_num(intal2[j]);
+        if (num1 >= num2)
+        {
+            diff[k++] = to_char(num1 - num2);
+        }
+        else
+        {
+            intal1t[i - 1] -= 1;
+            num1 += 10;
+            diff[k++] = to_char(num1 - num2);
+        }
+        --i;
+        --j;
+    }
+    while (i != -1)
+    {
+        diff[k++] = intal1t[i];
+        --i;
+    }
+    diff[k] = '\0';
+
+    // strip leading zeros : i.e. in reverse trailing zeros
+    i = strlen(diff) - 1;
+    while (diff[i] == '0')
+        --i;
+    diff[i + 1] = '\0';
+
+    strrev(diff);   // big-endian
+    free(intal1t);  // freeing the temporary string
+    return diff;
 }
