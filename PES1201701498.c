@@ -64,15 +64,29 @@ short int isZero(const char *num)
     return 0;
 }
 
-void append_zeros(char* str, short int n)
+void append_zeros(char *str, short int n)
 {
     short int i = strlen(str);
-    while(n != 0)
+    while (n != 0)
     {
         str[i++] = '0';
         --n;
     }
     str[i] = '\0';
+}
+
+char *int_to_string(int num)
+{
+    char *str = (char *)malloc(1001 * sizeof(char));
+    short int k = 0;
+    while (num != 0)
+    {
+        str[k++] = to_char(num % 10);
+        num /= 10;
+    }
+    str[k] = '\0';
+    strrev(str);
+    return str;
 }
 
 // ---------------------------------------------------------------------
@@ -109,7 +123,7 @@ char *intal_add(const char *intal1, const char *intal2)
         temp_num = temp_num % 10;
         final_num[k++] = to_char(temp_num);
     }
-    if(carry == 1)
+    if (carry == 1)
         final_num[k++] = '1';
     final_num[k] = '\0';
     strrev(final_num); // big-endian
@@ -247,8 +261,8 @@ char *intal_multiply(const char *intal1, const char *intal2)
         temp[k] = '\0';
         strrev(temp);
         lstrip_zero(temp);
-        append_zeros(temp, strlen(intal2t)-(i+1));
-        
+        append_zeros(temp, strlen(intal2t) - (i + 1));
+
         char *t = final; // this will be freed : just temporary
         final = intal_add(temp, final);
         free(t);
@@ -261,19 +275,19 @@ char *intal_multiply(const char *intal1, const char *intal2)
 // Returns nth fibonacci number.
 // intal_fibonacci(0) = intal "0".
 // intal_fibonacci(1) = intal "1".
-char* intal_fibonacci(unsigned int n)
+char *intal_fibonacci(unsigned int n)
 {
     if (n == 0)
         return "0";
     if (n == 1)
         return "1";
-    char* first = (char *)malloc(1001 * sizeof(char));
-    char* second = (char *)malloc(1001 * sizeof(char));
+    char *first = (char *)malloc(1001 * sizeof(char));
+    char *second = (char *)malloc(1001 * sizeof(char));
     strcpy(first, "0");
     strcpy(second, "1");
-    char* third;
-    char* first_temp;
-    for(short int i=2; i<=n; ++i)
+    char *third;
+    char *first_temp;
+    for (short int i = 2; i <= n; ++i)
     {
         third = intal_add(first, second);
         first_temp = first;
@@ -282,4 +296,24 @@ char* intal_fibonacci(unsigned int n)
         free(first_temp);
     }
     return third;
+}
+
+// Returns the factorial of n.
+char *intal_factorial(unsigned int n)
+{
+    if (n == 0)
+        return "1";
+    char *final = (char *)malloc(1001 * sizeof(char));
+    strcpy(final, "1");
+    char *final_temp;
+    char *str_num;
+    for (int i = 2; i <= n; ++i)
+    {
+        final_temp = final;
+        str_num = int_to_string(i);
+        final = intal_multiply(final, str_num);
+        free(final_temp);
+        free(str_num);
+    }
+    return final;
 }

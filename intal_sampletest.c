@@ -177,7 +177,7 @@ int main(int argc, char const *argv[]) {
 		}
 		free(result1);
 	}
-	#if 0
+
 	result1 = intal_factorial(30);
 	if(!result1) {
 		printf("Test intal_factorial FAILED.\n");
@@ -202,6 +202,7 @@ int main(int argc, char const *argv[]) {
 		free(result1);
 	}
 
+	#if 0
 	result1 = intal_bincoeff(10, 8);
 	if(!result1) {
 		printf("Test intal_bincoeff FAILED.\n");
