@@ -152,6 +152,7 @@ int main(int argc, char const *argv[]) {
 		}
 		free(result1);
 	}
+	#endif
 
 	result1 = intal_fibonacci(3);
 	if(!result1) {
@@ -176,7 +177,7 @@ int main(int argc, char const *argv[]) {
 		}
 		free(result1);
 	}
-
+	#if 0
 	result1 = intal_factorial(30);
 	if(!result1) {
 		printf("Test intal_factorial FAILED.\n");

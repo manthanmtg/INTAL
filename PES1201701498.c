@@ -257,3 +257,29 @@ char *intal_multiply(const char *intal1, const char *intal2)
     free(temp);
     return final;
 }
+
+// Returns nth fibonacci number.
+// intal_fibonacci(0) = intal "0".
+// intal_fibonacci(1) = intal "1".
+char* intal_fibonacci(unsigned int n)
+{
+    if (n == 0)
+        return "0";
+    if (n == 1)
+        return "1";
+    char* first = (char *)malloc(1001 * sizeof(char));
+    char* second = (char *)malloc(1001 * sizeof(char));
+    strcpy(first, "0");
+    strcpy(second, "1");
+    char* third;
+    char* first_temp;
+    for(short int i=2; i<=n; ++i)
+    {
+        third = intal_add(first, second);
+        first_temp = first;
+        first = second;
+        second = third;
+        free(first_temp);
+    }
+    return third;
+}
