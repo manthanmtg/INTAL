@@ -317,3 +317,39 @@ char *intal_factorial(unsigned int n)
     }
     return final;
 }
+
+// Returns the offset of the largest intal in the array.
+// Return the smallest offset if there are multiple occurrences.
+// 1 <= n <= 1000
+int intal_max(char **arr, int n)
+{
+    char *max = arr[0];
+    int max_off = 0;
+    for(short int i=1; i<n; ++i)
+    {
+        if(intal_compare(max, arr[i]) == -1)
+        {
+            max = arr[i];
+            max_off = i;
+        }
+    }
+    return max_off;
+}
+
+// Returns the offset of the smallest intal in the array.
+// Return the smallest offset if there are multiple occurrences.
+// 1 <= n <= 1000
+int intal_min(char **arr, int n)
+{
+    char *min = arr[0];
+    int min_off = 0;
+    for(short int i=1; i<n; ++i)
+    {
+        if(intal_compare(min, arr[i]) == 1)
+        {
+            min = arr[i];
+            min_off = i;
+        }
+    }
+    return min_off;
+}
