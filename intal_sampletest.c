@@ -242,7 +242,6 @@ int main(int argc, char const *argv[]) {
 		printf("Test intal_min FAILED.\nYour answer: %d\nExpected answer: %d\n", index1, 2);
 	}
 
-	#if 0
 	index1 = intal_search(a, n, a[7]);
 	if(6 == index1) {
 		printf("Test intal_search PASSED\n");
@@ -250,6 +249,7 @@ int main(int argc, char const *argv[]) {
 		printf("Test intal_search FAILED.\nYour answer: %d\nExpected answer: %d\n", index1, 6);
 	}
 
+	#if 0
 	result1 = coin_row_problem(a, n);
 	if(!result1) {
 		printf("Test coin_row_problem FAILED.\n");

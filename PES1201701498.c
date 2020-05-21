@@ -325,9 +325,9 @@ int intal_max(char **arr, int n)
 {
     char *max = arr[0];
     int max_off = 0;
-    for(short int i=1; i<n; ++i)
+    for (short int i = 1; i < n; ++i)
     {
-        if(intal_compare(max, arr[i]) == -1)
+        if (intal_compare(max, arr[i]) == -1)
         {
             max = arr[i];
             max_off = i;
@@ -343,13 +343,26 @@ int intal_min(char **arr, int n)
 {
     char *min = arr[0];
     int min_off = 0;
-    for(short int i=1; i<n; ++i)
+    for (short int i = 1; i < n; ++i)
     {
-        if(intal_compare(min, arr[i]) == 1)
+        if (intal_compare(min, arr[i]) == 1)
         {
             min = arr[i];
             min_off = i;
         }
     }
     return min_off;
+}
+
+// Returns the offset of the first occurrence of the key intal in the array.
+// Returns -1 if the key is not found.
+// 1 <= n <= 1000
+int intal_search(char **arr, int n, const char *key)
+{
+    for (short int i = 0; i < n; ++i)
+    {
+        if (intal_compare(arr[i], key) == 0)
+            return i;
+    }
+    return -1;
 }
