@@ -1,12 +1,13 @@
 /*
- * 	Author:   Manthan B Y
- *  SRN: PES1201701498
+ * 	Author: Manthan B Y
+ *  SRN   : PES1201701498
  * 	Language: C
  *  Date: 20-05-2020
  * 	
  * 	Problem Statement: INTAL Implementation
- *  #### Implementation File ####
+ *  ############## Implementation File ##############
 */
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -36,7 +37,45 @@ char to_char(const int num)
 {
     return num + '0';
 }
-// ------------------------------------------------------------------
+
+void rstrip_zero(char *str)
+{
+    // zeros will be in right
+    short int i = strlen(str) - 1;
+    while (str[i] == '0')
+        --i;
+    str[i + 1] = '\0';
+}
+
+void lstrip_zero(char *num)
+{
+    short int zeros = 0;
+    while (num[zeros] == '0')
+        ++zeros;
+    strcpy(num, num + zeros);
+    if (strlen(num) == 0)
+        strcpy(num, "0");
+}
+
+short int isZero(const char *num)
+{
+    if (0 == strcmp(num, "0"))
+        return 1;
+    return 0;
+}
+
+void append_zeros(char* str, short int n)
+{
+    short int i = strlen(str);
+    while(n != 0)
+    {
+        str[i++] = '0';
+        --n;
+    }
+    str[i] = '\0';
+}
+
+// ---------------------------------------------------------------------
 
 // Returns the sum of two intals.
 char *intal_add(const char *intal1, const char *intal2)
@@ -70,6 +109,8 @@ char *intal_add(const char *intal1, const char *intal2)
         temp_num = temp_num % 10;
         final_num[k++] = to_char(temp_num);
     }
+    if(carry == 1)
+        final_num[k++] = '1';
     final_num[k] = '\0';
     strrev(final_num); // big-endian
     return final_num;
@@ -147,13 +188,72 @@ char *intal_diff(const char *intal1, const char *intal2)
     }
     diff[k] = '\0';
 
-    // strip leading zeros : i.e. in reverse trailing zeros
-    i = strlen(diff) - 1;
-    while (diff[i] == '0')
-        --i;
-    diff[i + 1] = '\0';
+    // rstrip_zero(diff);  // zeros which are not required will be in the right of the string
 
-    strrev(diff);   // big-endian
-    free(intal1t);  // freeing the temporary string
+    strrev(diff); // big-endian
+    lstrip_zero(diff);
+    free(intal1t); // freeing the temporary string
     return diff;
+}
+
+// Returns the product of two intals.
+char *intal_multiply(const char *intal1, const char *intal2)
+{
+    char *intal1t = (char *)malloc(1001 * sizeof(char));
+    strcpy(intal1t, intal1);
+    char *intal2t = (char *)malloc(1001 * sizeof(char));
+    strcpy(intal2t, intal2);
+
+    lstrip_zero(intal1t);
+    lstrip_zero(intal2t);
+
+    if (isZero(intal1t) || isZero(intal2t))
+        return "0";
+
+    if (strlen(intal1t) < strlen(intal2t))
+    {
+        char *temp = intal1t;
+        intal1t = intal2t;
+        intal2t = temp;
+    } // 1 X 2
+
+    char *temp = (char *)malloc(1001 * sizeof(char));
+    char *final = (char *)malloc(1001 * sizeof(char));
+    strcpy(final, "0");
+
+    short int i = strlen(intal2t) - 1; // intal2
+    short int j;                       // intal1
+    short int k;                       // temp
+
+    short int num1;
+    short int num2;
+    short int res;
+    short int carry;
+    while (i != -1)
+    {
+        num1 = to_num(intal2t[i]);
+        j = strlen(intal1t) - 1;
+        carry = 0;
+        k = 0;
+        while (j != -1)
+        {
+            num2 = to_num(intal1t[j]);
+            res = carry + (num1 * num2);
+            temp[k++] = to_char(res % 10);
+            carry = res / 10;
+            --j;
+        }
+        temp[k++] = to_char(carry);
+        temp[k] = '\0';
+        strrev(temp);
+        lstrip_zero(temp);
+        append_zeros(temp, strlen(intal2t)-(i+1));
+        
+        char *t = final; // this will be freed : just temporary
+        final = intal_add(temp, final);
+        free(t);
+        --i;
+    }
+    free(temp);
+    return final;
 }
