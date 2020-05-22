@@ -1,2 +1,5 @@
 mytest.out
 a.out
+.vscode/*
+.vscode/
+.vscode
