@@ -261,6 +261,7 @@ int main(int argc, char const *argv[]) {
 		}
 		free(result1);
 	}
+	#endif
 	
 	intal_sort(a, n);
 	printf("\nTest intal_sort PASSED only if the following sequence of %d intals are sorted in nondecreasing order.\n", n);
@@ -268,7 +269,7 @@ int main(int argc, char const *argv[]) {
 		printf("%s\n", a[i]);
 	}
 	printf("\n");
-
+	
 	index1 = intal_binsearch(a, n, "3");
 	if(1 == index1) {
 		printf("Test intal_binsearch and probably intal_sort PASSED\n");
@@ -281,7 +282,6 @@ int main(int argc, char const *argv[]) {
 		free(a[i]);
 	}
 	free(a);
-	#endif
 
 	return 0;
 }

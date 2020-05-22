@@ -91,6 +91,112 @@ char *int_to_string(int num)
 
 // ---------------------------------------------------------------------
 
+// Returns the comparison value of two intals.
+// Returns 0 when both are equal.
+// Returns +1 when intal1 is greater, and -1 when intal2 is greater.
+int intal_compare(const char *intal1, const char *intal2)
+{
+    short int i = strlen(intal1) - 1;
+    short int j = strlen(intal2) - 1;
+
+    if (i > j)
+        return 1; // length of intal1 is greater than length of intal2
+    if (i < j)
+        return -1; // length of intal2 is greater than length of intal1
+
+    // same length : go from 0 index to high
+    i = 0;
+    while (intal1[i] != '\0')
+    {
+        if (intal1[i] > intal2[i])
+            return 1;
+        if (intal2[i] > intal1[i])
+            return -1;
+        ++i;
+    }
+    return 0;
+}
+
+// ------------------------ Merge Sort ---------------------------------
+
+// Merges two subarrays of arr[].
+// First subarray is arr[l..m]
+// Second subarray is arr[m+1..r]
+void merge(char **arr, int l, int m, int r)
+{
+    int i, j, k;
+    int n1 = m - l + 1;
+    int n2 = r - m;
+
+    /* create temp arrays */
+    char **L = (char **)malloc(n1 * sizeof(char *));
+    char **R = (char **)malloc(n2 * sizeof(char *));
+
+    /* Copy data to temp arrays L[] and R[] */
+    for (i = 0; i < n1; i++)
+        L[i] = arr[l + i];
+    for (j = 0; j < n2; j++)
+        R[j] = arr[m + 1 + j];
+    
+    /* Merge the temp arrays back into arr[l..r]*/
+    i = 0; // Initial index of first subarray
+    j = 0; // Initial index of second subarray
+    k = l; // Initial index of merged subarray
+    short int cmp;
+    while (i < n1 && j < n2)
+    {
+        cmp = intal_compare(L[i], R[j]);
+        if (cmp == -1 || cmp == 0)
+        {
+            arr[k] = L[i];
+            i++;
+        }
+        else
+        {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    /* Copy the remaining elements of L[], if there 
+       are any */
+    while (i < n1)
+    {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    /* Copy the remaining elements of R[], if there 
+       are any */
+    while (j < n2)
+    {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+/* l is for left index and r is right index of the 
+   sub-array of arr to be sorted */
+void mergeSort(char **arr, int l, int r)
+{
+    if (l < r)
+    {
+        // Same as (l+r)/2, but avoids overflow for
+        // large l and h
+        int m = l + (r - l) / 2;
+
+        // Sort first and second halves
+        mergeSort(arr, l, m);
+        mergeSort(arr, m + 1, r);
+
+        merge(arr, l, m, r);
+    }
+}
+
+
 // Returns the sum of two intals.
 char *intal_add(const char *intal1, const char *intal2)
 {
@@ -128,32 +234,6 @@ char *intal_add(const char *intal1, const char *intal2)
     final_num[k] = '\0';
     strrev(final_num); // big-endian
     return final_num;
-}
-
-// Returns the comparison value of two intals.
-// Returns 0 when both are equal.
-// Returns +1 when intal1 is greater, and -1 when intal2 is greater.
-int intal_compare(const char *intal1, const char *intal2)
-{
-    short int i = strlen(intal1) - 1;
-    short int j = strlen(intal2) - 1;
-
-    if (i > j)
-        return 1; // length of intal1 is greater than length of intal2
-    if (i < j)
-        return -1; // length of intal2 is greater than length of intal1
-
-    // same length : go from 0 index to high
-    i = 0;
-    while (intal1[i] != '\0')
-    {
-        if (intal1[i] > intal2[i])
-            return 1;
-        if (intal2[i] > intal1[i])
-            return -1;
-        ++i;
-    }
-    return 0;
 }
 
 // Returns the difference (obviously, nonnegative) of two intals.
@@ -365,4 +445,37 @@ int intal_search(char **arr, int n, const char *key)
             return i;
     }
     return -1;
+}
+
+// Returns the offset of the first occurrence of the key intal in the SORTED array.
+// Returns -1 if the key is not found.
+// The array is sorted in nondecreasing order.
+// 1 <= n <= 1000
+// The implementation should be a O(log n) algorithm.
+int intal_binsearch(char **arr, int n, const char *key)
+{
+    short int left = 0;
+    short int right = n - 1;
+    short int mid;
+    short int cmp = 0;
+    while (left <= right)
+    {
+        mid = (left + right) / 2;
+        cmp = intal_compare(key, arr[mid]);
+        if (cmp == 0)
+            return mid;
+        else if (cmp == 1)
+            left = mid + 1;
+        else
+            right = mid - 1;
+    }
+    return -1;
+}
+
+// Sorts the array of n intals.
+// 1 <= n <= 1000
+// The implementation should be a O(n log n) algorithm.
+void intal_sort(char **arr, int n)
+{
+    mergeSort(arr, 0, n - 1);
 }
