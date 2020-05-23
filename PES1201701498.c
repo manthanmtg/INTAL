@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// -------------------- Helper Functions -------------------------------
+// -------------------- <Helper Functions> -------------------------------
 
 char *strrev(char *str)
 {
@@ -78,6 +78,11 @@ void append_zeros(char *str, short int n)
 char *int_to_string(int num)
 {
     char *str = (char *)malloc(1001 * sizeof(char));
+    if(num == 0)
+    {
+        strcpy(str, "0");
+        return str;
+    }
     short int k = 0;
     while (num != 0)
     {
@@ -89,7 +94,20 @@ char *int_to_string(int num)
     return str;
 }
 
-// ---------------------------------------------------------------------
+/*
+    Returns str[a:b]   (Python sematic)
+*/
+char *getSubString(const char *str, short int a, short int b)
+{
+    char *substr = (char *)malloc(1001 * sizeof(char));
+    short int k = 0;
+    for (short int i = a; i < b; ++i)
+        substr[k++] = str[i];
+    substr[k] = '\0';
+    return substr;
+}
+
+// ----------------------- </Helper Functions> ------------------------------
 
 // Returns the comparison value of two intals.
 // Returns 0 when both are equal.
@@ -117,7 +135,7 @@ int intal_compare(const char *intal1, const char *intal2)
     return 0;
 }
 
-// ------------------------ Merge Sort ---------------------------------
+// ------------------------ <Merge Sort> ---------------------------------
 
 // Merges two subarrays of arr[].
 // First subarray is arr[l..m]
@@ -137,7 +155,7 @@ void merge(char **arr, int l, int m, int r)
         L[i] = arr[l + i];
     for (j = 0; j < n2; j++)
         R[j] = arr[m + 1 + j];
-    
+
     /* Merge the temp arrays back into arr[l..r]*/
     i = 0; // Initial index of first subarray
     j = 0; // Initial index of second subarray
@@ -196,6 +214,7 @@ void mergeSort(char **arr, int l, int r)
     }
 }
 
+// ------------------ </Merge Sort> ----------------------------------
 
 // Returns the sum of two intals.
 char *intal_add(const char *intal1, const char *intal2)
@@ -242,7 +261,10 @@ char *intal_diff(const char *intal1, const char *intal2)
     short int cmp = intal_compare(intal1, intal2);
     char *diff = (char *)malloc(1001 * sizeof(char));
     if (cmp == 0)
-        return "0";
+    {
+        strcpy(diff, "0");
+        return diff;
+    }
     if (cmp == -1) // if intal2 is greater : swap intal1 and intal2 (pointers)
     {
         const char *temp = intal1;
@@ -258,6 +280,7 @@ char *intal_diff(const char *intal1, const char *intal2)
     short int k = 0;
     short int num1 = 0;
     short int num2 = 0;
+    short int ti;
     while (j != -1)
     {
         num1 = to_num(intal1t[i]);
@@ -268,7 +291,13 @@ char *intal_diff(const char *intal1, const char *intal2)
         }
         else
         {
-            intal1t[i - 1] -= 1;
+            ti = i-1;
+            while(intal1t[ti] == '0')
+            {
+                intal1t[ti] = '9';
+                --ti;
+            }
+            intal1t[ti] -= 1;
             num1 += 10;
             diff[k++] = to_char(num1 - num2);
         }
@@ -352,6 +381,93 @@ char *intal_multiply(const char *intal1, const char *intal2)
     return final;
 }
 
+// Returns intal1 mod intal2
+// The mod value should be in the range [0, intal2 - 1].
+// intal2 > 1
+// Implement a O(log intal1) time taking algorithm.
+// O(intal1 / intal2) time taking algorithm may exceed time limit.
+// O(intal1 / intal2) algorithm may repeatedly subtract intal2 from intal1.
+// That will take intal1/intal2 iterations.
+// You need to design a O(log intal1) time taking algorithm.
+// Generate your own testcases at https://www.omnicalculator.com/math/modulo
+char *intal_mod(const char *intal1, const char *intal2)
+{
+    char *current = (char *)malloc(1001 * sizeof(char));
+    short int cmp = intal_compare(intal1, intal2);
+    if (cmp == 0)
+    {
+        strcpy(current, "0");
+        return current;
+    }
+
+    if (cmp == -1)
+    {
+        strcpy(current, intal1);
+        return current;
+    }
+
+    short int l1 = strlen(intal1);
+    short int l2 = strlen(intal2);
+    short int temp;
+
+    short int i;
+    short int curr_index = 0;
+    char *up;
+    current[0] = '\0';
+    char *curr_temp;
+    char *down = (char *)malloc(1001 * sizeof(char));
+    char *down_temp;
+
+    while (curr_index < l1)
+    {
+        up = getSubString(intal1, curr_index, curr_index + l2);
+        current = strcat(current, up);
+        lstrip_zero(current);
+        curr_index += l2;
+        cmp = intal_compare(current, intal2);
+        if (cmp == -1)
+        {
+            temp = strlen(current);
+            while(cmp == -1 && curr_index < l1)
+            {
+                current[temp++] = intal1[curr_index++];
+                lstrip_zero(current);
+                cmp = intal_compare(current, intal2);
+            }
+            current[temp] = '\0';
+        }
+
+        strcpy(down, intal2);
+
+        i = 1;
+        cmp = intal_compare(down, current);
+        while (cmp == -1 || cmp == 0) // down < current
+        {
+            down_temp = down;
+            down = intal_multiply(intal2, int_to_string(i));
+            ++i;
+            free(down_temp);
+            cmp = intal_compare(down, current);
+        }
+        
+        down_temp = down;
+        down = intal_diff(down, intal2);
+        free(down_temp);
+
+        if (strcmp(down, "0") != 0)
+        {
+            curr_temp = current;
+            current = intal_diff(current, down);
+            free(curr_temp);
+        }
+    }
+    
+    if(strlen(current) == 0)
+        strcpy(current, "0");
+    
+    return current;
+}
+
 // Returns nth fibonacci number.
 // intal_fibonacci(0) = intal "0".
 // intal_fibonacci(1) = intal "1".
@@ -397,6 +513,7 @@ char *intal_factorial(unsigned int n)
     }
     return final;
 }
+
 
 // Returns the offset of the largest intal in the array.
 // Return the smallest offset if there are multiple occurrences.
