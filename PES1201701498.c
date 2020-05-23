@@ -52,8 +52,8 @@ static void lstrip_zero(char *num)
     short int zeros = 0;
     while (num[zeros] == '0')
         ++zeros;
-    char* temp = (char *)malloc(1001 * sizeof(char));
-    strcpy(temp, num+zeros);
+    char *temp = (char *)malloc(1001 * sizeof(char));
+    strcpy(temp, num + zeros);
     strcpy(num, temp);
     free(temp);
     if (strlen(num) == 0)
@@ -81,7 +81,7 @@ static void append_zeros(char *str, short int n)
 static char *int_to_string(int num)
 {
     char *str = (char *)malloc(1001 * sizeof(char));
-    if(num == 0)
+    if (num == 0)
     {
         strcpy(str, "0");
         return str;
@@ -431,7 +431,7 @@ char *intal_mod(const char *intal1, const char *intal2)
         if (cmp == -1)
         {
             temp = strlen(current);
-            while(cmp == -1 && curr_index < l1)
+            while (cmp == -1 && curr_index < l1)
             {
                 current[temp++] = intal1[curr_index++];
                 lstrip_zero(current);
@@ -452,7 +452,7 @@ char *intal_mod(const char *intal1, const char *intal2)
             free(down_temp);
             cmp = intal_compare(down, current);
         }
-        
+
         down_temp = down;
         down = intal_diff(down, intal2);
         free(down_temp);
@@ -464,14 +464,48 @@ char *intal_mod(const char *intal1, const char *intal2)
             free(curr_temp);
         }
     }
-    
-    if(strlen(current) == 0)
+
+    if (strlen(current) == 0)
         strcpy(current, "0");
-    
+
     return current;
 }
 
-void gcd_helper(const char *intal1, const char *intal2, char *res)
+static char *pow_helper(const char *num, unsigned int exp)
+{
+    if (exp == 1)
+    {
+        char *left = (char *)malloc(1001 * sizeof(char));
+        strcpy(left, num);
+        return left;
+    }
+    char *left;
+    char *right = pow_helper(num, exp / 2);
+    short int isEven = (exp%2  == 0);
+    if(isEven)
+    {
+        left = intal_multiply(right, right);
+        free(right);
+    }
+    else
+    {
+        char *temp = intal_multiply(right, right);
+        left = intal_multiply(temp, num);
+        free(right);
+        free(temp);
+    }
+    return left;
+}
+// Returns intal1 ^ intal2.
+// Let 0 ^ n = 0, where n is an intal.
+// Implement a O(log n) intal multiplications algorithm.
+// 2^3000 has less than 1000 decimal digits. 3000 intal multiplications may exceed time limit.
+char *intal_pow(const char *intal1, unsigned int n)
+{
+    return pow_helper(intal1, n);
+}
+
+static void gcd_helper(const char *intal1, const char *intal2, char *res)
 {
     if (strcmp(intal1, "0") == 0)
     {
@@ -542,7 +576,6 @@ char *intal_factorial(unsigned int n)
     }
     return final;
 }
-
 
 // Returns the offset of the largest intal in the array.
 // Return the smallest offset if there are multiple occurrences.
