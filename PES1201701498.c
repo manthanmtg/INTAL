@@ -481,8 +481,8 @@ static char *pow_helper(const char *num, unsigned int exp)
     }
     char *left;
     char *right = pow_helper(num, exp / 2);
-    short int isEven = (exp%2  == 0);
-    if(isEven)
+    short int isEven = (exp % 2 == 0);
+    if (isEven)
     {
         left = intal_multiply(right, right);
         free(right);
@@ -575,6 +575,89 @@ char *intal_factorial(unsigned int n)
         free(str_num);
     }
     return final;
+}
+
+// Returns the Binomial Coefficient C(n,k).
+// 0 <= k <= n
+// C(n,k) < 10^1000 because the returning value is expected to be less than 10^1000.
+// Use the Pascal's identity C(n,k) = C(n-1,k) + C(n-1,k-1)
+// Make sure the intermediate intal values do not cross C(n,k).
+// Use Dynamic Programming. Use extra space of not more than O(k) number of intals. Do not allocate the whole O(nk) memo table.
+// Don't let C(1000,900) take more time than C(1000,500). Time limit may exceed otherwise.
+char *intal_bincoeff(unsigned int n, unsigned int k)
+{
+    char **memo = (char **)malloc((k + 1) * sizeof(char *));
+    for (int i = 0; i <= k; ++i)
+    {
+        memo[i] = (char *)malloc(1001 * sizeof(char));
+        memo[i][0] = '0';
+        memo[i][1] = '\0';
+    }
+    memo[0][0] = '1';
+    char *current;
+    char *previous;
+    char *temp;
+    for (short int i = 1; i <= n; ++i)
+    {
+        current = (char *)malloc(1001 * sizeof(char));
+        strcpy(current, memo[0]);
+
+        for (short int j = 1; j <= i && j <= k; ++j)
+        {
+
+            previous = (char *)malloc(1001 * sizeof(char));
+            strcpy(previous, current);
+            free(current);
+            current = (char *)malloc(1001 * sizeof(char));
+            strcpy(current, memo[j]);
+
+            temp = intal_add(previous, current);
+
+            free(memo[j]);
+
+            memo[j] = (char *)malloc(1001 * sizeof(char));
+            strcpy(memo[j], temp);
+            free(temp);
+            if (i % 2 == 1 && j + 1 == (i + 1) / 2)
+                break;
+            if (i % 2 == 0 && j + 1 == (i / 2))
+            {
+                temp = intal_multiply(current, "2");
+                free(memo[j + 1]);
+                memo[j + 1] = (char *)malloc(1001 * sizeof(char));
+                strcpy(memo[j + 1], temp);
+                free(temp);
+                break;
+            }
+            free(previous);
+        }
+        free(current);
+    }
+
+    int mid = k + 1;
+
+    if (n % 2 == 0 && k > (n / 2) + 1)
+    {
+        mid = n / 2 + 1;
+        mid -= ((k - ((n / 2) + 1)) + 1);
+    }
+
+    if (n % 2 == 1 && k > (n + 1) / 2)
+    {
+        mid = (n + 1) / 2;
+        mid -= (k - (n + 1) / 2) + 1;
+    }
+
+    char *coeff = (char *)malloc(1001 * sizeof(char));
+
+    strcpy(coeff, memo[mid - 1]);
+    for (int i = 0; i <= k; ++i)
+    {
+        free(memo[i]);
+    }
+
+    free(memo);
+    return coeff;
 }
 
 // Returns the offset of the largest intal in the array.
