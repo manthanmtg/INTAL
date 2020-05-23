@@ -741,3 +741,38 @@ void intal_sort(char **arr, int n)
 {
     mergeSort(arr, 0, n - 1);
 }
+
+// Coin-Row Problem - Dynamic Programming Solution
+// There is a row of n coins whose values are some positive integers C[0..n-1].
+// The goal is to pick up the maximum amount of money subject to the constraint that
+// no two coins adjacent in the initial row can be picked up.
+// 1 <= n <= 1000
+// The implementation should be O(n) time and O(1) extra space even though the DP table may be of O(n) size.
+// Eg: Coins = [10, 2, 4, 6, 3, 9, 5] returns 25
+char *coin_row_problem(char **arr, int n)
+{
+    char *previous = (char *)malloc(1001 * sizeof(char));
+    strcpy(previous, "0");
+    char *current = (char *)malloc(1001 * sizeof(char));
+    strcpy(current, arr[0]);
+
+    for (int i = 1; i < n; ++i)
+    {
+        char *temp = intal_add(previous, arr[i]);
+        short int cmp = intal_compare(temp, current);
+        if (cmp == 1)
+        {
+            strcpy(previous, current);
+            strcpy(current, temp);
+        }
+        else
+        {
+            strcpy(previous, current);
+        }
+        free(temp);
+    }
+
+    free(previous);
+
+    return current;
+}

@@ -1,0 +1,86 @@
+Project Report
+
+1. Introduction
+---------------
+An intal is a nonnegative integer of arbitrary length. But in this implementation we have
+limited the length of intal to 100- digits. Normally in C, the integers are stored in 
+primitive data type int(maybe with storage qualifiers like long, unsigned, short ...)
+In the intal implementation we are storing the integer as a string(character array).
+We do not have a primitive data type in C to store such large numbers, hence we are making
+use of string to store the integer and perform operations on them. intal can be used to perform
+calculations of big numbers which cannot be directy implemented in C.
+
+2. Approach
+-----------
+intal_add : 
+    Normal implementation of adding two numbers as we do in book
+
+intal_compare:
+    First check based on the length then if the length is same,
+    Start comparing from the MSD(Most Significant Digit)
+
+intal_diff:
+    First compare and check the largest number
+    Subtract the larger number with smaller one (As we do in book)
+
+intal_mutiply:
+    As we do in book (standard multiplication)
+
+intal_mod:
+    As we do in book (using fractions)
+
+intal_pow:
+    Recursive method
+
+intal_gcd:
+    Euclid's algorithm
+
+intal_fibonacci:
+    Standard iterative algorithm
+
+intal_factorial:
+    Standard iterative algorithm
+
+intal_bincoeff:
+    Using pascal's identity genrating half of the triangle (nCr == nC(n-r))
+
+intal_max:
+    Standard method
+    Using intal_compare
+    Time: O(n)
+    Space: O(1)
+
+intal_min:
+    Standard method
+    Using intal_compare
+    Time: O(n)
+    Space: O(1)
+
+intal_compare:
+    Standard method 
+    Time: O(n)
+    Space: O(1)
+    Using intal_compare
+
+intal_binsearch:
+    Standard binary search algorithm 
+    Time: O(log n)
+    Space: O(1)
+
+intal_sort:
+    Merge Sort
+    Using intal_compare
+    Time: O(log n)
+
+coin_row_problem:
+    Space: O(1) 
+    Time: O(n)
+    Dynamic Programming
+
+3. Future work
+--------------
+Include negative numbers also.
+Divison functionality can be added.
+Limitation of 1000 digits can be removed.
+Multiplication can be done using Karatsuba algorithm to decrease time complexity.
+Can think of some better algorithms(if there) to increase efficiency.
