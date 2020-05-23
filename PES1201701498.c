@@ -13,7 +13,7 @@
 
 // -------------------- <Helper Functions> -------------------------------
 
-char *strrev(char *str)
+static char *strrev(char *str)
 {
     char *p1, *p2;
 
@@ -28,17 +28,17 @@ char *strrev(char *str)
     return str;
 }
 
-short int to_num(const char ch)
+static short int to_num(const char ch)
 {
     return ch - '0';
 }
 
-char to_char(const int num)
+static char to_char(const int num)
 {
     return num + '0';
 }
 
-void rstrip_zero(char *str)
+static void rstrip_zero(char *str)
 {
     // zeros will be in right
     short int i = strlen(str) - 1;
@@ -47,7 +47,7 @@ void rstrip_zero(char *str)
     str[i + 1] = '\0';
 }
 
-void lstrip_zero(char *num)
+static void lstrip_zero(char *num)
 {
     short int zeros = 0;
     while (num[zeros] == '0')
@@ -60,14 +60,14 @@ void lstrip_zero(char *num)
         strcpy(num, "0");
 }
 
-short int isZero(const char *num)
+static short int isZero(const char *num)
 {
     if (0 == strcmp(num, "0"))
         return 1;
     return 0;
 }
 
-void append_zeros(char *str, short int n)
+static void append_zeros(char *str, short int n)
 {
     short int i = strlen(str);
     while (n != 0)
@@ -78,7 +78,7 @@ void append_zeros(char *str, short int n)
     str[i] = '\0';
 }
 
-char *int_to_string(int num)
+static char *int_to_string(int num)
 {
     char *str = (char *)malloc(1001 * sizeof(char));
     if(num == 0)
@@ -100,7 +100,7 @@ char *int_to_string(int num)
 /*
     Returns str[a:b]   (Python sematic)
 */
-char *getSubString(const char *str, short int a, short int b)
+static char *getSubString(const char *str, short int a, short int b)
 {
     char *substr = (char *)malloc(1001 * sizeof(char));
     short int k = 0;
@@ -143,7 +143,7 @@ int intal_compare(const char *intal1, const char *intal2)
 // Merges two subarrays of arr[].
 // First subarray is arr[l..m]
 // Second subarray is arr[m+1..r]
-void merge(char **arr, int l, int m, int r)
+static void merge(char **arr, int l, int m, int r)
 {
     int i, j, k;
     int n1 = m - l + 1;
@@ -201,7 +201,7 @@ void merge(char **arr, int l, int m, int r)
 
 /* l is for left index and r is right index of the 
    sub-array of arr to be sorted */
-void mergeSort(char **arr, int l, int r)
+static void mergeSort(char **arr, int l, int r)
 {
     if (l < r)
     {
