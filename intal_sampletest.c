@@ -140,6 +140,7 @@ int main(int argc, char const *argv[]) {
 		}
 		free(result1);
 	}
+	#endif
 
 	result1 = intal_gcd(a[0], a[5]);
 	if(!result1) {
@@ -152,7 +153,6 @@ int main(int argc, char const *argv[]) {
 		}
 		free(result1);
 	}
-	#endif
 
 	result1 = intal_fibonacci(3);
 	if(!result1) {

@@ -52,7 +52,10 @@ void lstrip_zero(char *num)
     short int zeros = 0;
     while (num[zeros] == '0')
         ++zeros;
-    strcpy(num, num + zeros);
+    char* temp = (char *)malloc(1001 * sizeof(char));
+    strcpy(temp, num+zeros);
+    strcpy(num, temp);
+    free(temp);
     if (strlen(num) == 0)
         strcpy(num, "0");
 }
@@ -291,8 +294,8 @@ char *intal_diff(const char *intal1, const char *intal2)
         }
         else
         {
-            ti = i-1;
-            while(intal1t[ti] == '0')
+            ti = i - 1;
+            while (intal1t[ti] == '0')
             {
                 intal1t[ti] = '9';
                 --ti;
@@ -466,6 +469,32 @@ char *intal_mod(const char *intal1, const char *intal2)
         strcpy(current, "0");
     
     return current;
+}
+
+void gcd_helper(const char *intal1, const char *intal2, char *res)
+{
+    if (strcmp(intal1, "0") == 0)
+    {
+        strcpy(res, intal2);
+        return;
+    }
+    char *temp = intal_mod(intal2, intal1);
+    gcd_helper(temp, intal1, res);
+    free(temp);
+    return;
+}
+// Returns Greatest Common Devisor of intal1 and intal2.
+// Let GCD be "0" if both intal1 and intal2 are "0" even though it is undefined, mathematically.
+// Use Euclid's theorem to not exceed the time limit.
+char *intal_gcd(const char *intal1, const char *intal2)
+{
+    // char *intal1t = (char *)malloc(1001 * sizeof(char));
+    // char *intal2t = (char *)malloc(1001 * sizeof(char));
+    // strcpy(intal1t, intal1);
+    // strcpy(intal2t, intal2);
+    char *res = (char *)malloc(1001 * sizeof(char));
+    gcd_helper(intal1, intal2, res);
+    return res;
 }
 
 // Returns nth fibonacci number.
