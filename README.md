@@ -1,4 +1,4 @@
-# APSSE-Mini_Project
+# INTAL - Arbitrary length integers using string in C
 Mini Project for APSSE Course
 
 Develop a C library for the integers of arbitrary length (intal).
